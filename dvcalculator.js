@@ -454,7 +454,7 @@ function initialize(gen)
 
 	if(gen == 1)
 	{
-		storage.current_pokemon[0] = "Bulbasaur";
+		storage.current_pokemon[0] = "Charmander";
 		storage.current_pokemon[1] = "Bulbasaur";
 		storage.current_pokemon[2] = 0;
 		storage.zone = "pallettown";
@@ -502,15 +502,15 @@ function clear()
 {
 	storage.input = [];//clear all previous input to ensure next call to pollInput doesn't pick up old data
 	storage.stats = new Object();
-	storage.stats.lvl = 0;
-	storage.stats.hp = 0;
-	storage.stats.att = 0;
-	storage.stats.def = 0;
-	storage.stats.spd = 0;
+	storage.stats.lvl = 5;
+	storage.stats.hp = 19;
+	storage.stats.att = 11;
+	storage.stats.def = 10;
+	storage.stats.spd = 12;
 
 	if(storage.gen == 1)
 	{
-		storage.stats.spc = 0;
+		storage.stats.spc = 11;
 	}
 	else if(storage.gen == 2)
 	{
