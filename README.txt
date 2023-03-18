@@ -2,6 +2,7 @@
 2023-03-18 
 
 DV Calculator by tewky
+Edited to defualt typical Charmander Gen I stats
 
 Supports Firefox and Chrome, including mobile devices.
 
