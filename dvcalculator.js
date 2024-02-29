@@ -953,9 +953,8 @@ function update()
 			else
 			{
 				/* because of the low precision of minimum step size for stat experience
-				*  when using the vitamin trick the calculator runs in 'estimation' mode,
-				*  where the results are considered to be only 50% accurate
-				*/
+				   when using the vitamin trick the calculator runs in 'estimation' mode,
+				   where the results are considered to be only 50% accurate */
 				storage.estimation = true;
 				storage.stat_exp = createArray(storage.global.numstats, 0);
 
@@ -1292,20 +1291,20 @@ function update()
 					}
 
 					if(!storage.display.hiddenpower)//if display hidden power already set don't calculate again
-					{																//in cases where clear() was called for a saved pokemon not all
-						calculateHiddenPower();       //required values for calculation will be initialized
+					{								//in cases where clear() was called for a saved pokemon not all
+						calculateHiddenPower();     //required values for calculation will be initialized
 						storage.display.hiddenpower = true;
 					}
 				}
 
 				calculateHiddenPower();
 
-				//calculate pokemon's rarity, which is the probability of finding same DVs or better in any random wild pokemon
+				//calculate pokemon's rarity, which is roughly the probability of finding same DVs or better in any random wild pokemon
+				//updated to use a statistical method to improve rarity stat
 				if(getLength(storage.records) > 0)
 				{
-					var rarity = 1;
+					/* var rarity = 1;
 					var hp = 1;
-
 					//runs once for each stat (4)
 					for(i = 1; i < getLength(storage.mode); i++)
 					{
@@ -1320,10 +1319,19 @@ function update()
 							}
 						}
 					}
-					
 					hp = (1 / hp) - 1;//arbitrary translation
-					hp = Math.max(1, hp);
-					storage.rarity = Math.ceil(1.0 / rarity  * hp);
+					hp = Math.max(1, hp); */
+					var dvTotal = hp;
+					for(i = 1; i < getLength(storage.mode); i++)
+					{
+						if(!(storage.gen == 2 && i == 5))
+							dvTotal += storage.mode[i]
+					}
+					const step = 3;
+					const bucketCount = Math.ceil(75 / step);
+					const clamp = 3; //exclude this many from each end of rarity array (100% and 0% results)
+					const rarities = [100.0, 100.0, 99.96, 99.79, 99.38, 98.44, 96.78, 93.88, 89.32, 82.87, 74.57, 64.7, 53.79, 42.49, 31.92, 22.46, 14.8, 9.11, 5.04, 2.54, 1.16, 0.42, 0.14, 0.02, 0.0];
+					storage.rarity = (Math.ceil(rarities[Math.max(Math.min(Math.ceil(dvTotal / step), bucketCount - 1 - clamp), clamp)])).toFixed(0);
 					storage.display.rare = true;
 				}
 
