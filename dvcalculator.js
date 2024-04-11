@@ -497,8 +497,8 @@ function clear()
 	storage.stats.lvl = 5;
 	storage.stats.hp = 19;
 	storage.stats.att = 11;
-	storage.stats.def = 10;
-	storage.stats.spd = 12;
+	storage.stats.def = 9;
+	storage.stats.spd = 15;
 
 	if(storage.gen == 1)
 	{
