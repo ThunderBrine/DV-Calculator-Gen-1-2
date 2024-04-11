@@ -446,7 +446,7 @@ function initialize(gen)
 
 	if(gen == 1)
 	{
-		storage.current_pokemon[0] = "Charmander";
+		storage.current_pokemon[0] = "Pikachu";
 		storage.current_pokemon[1] = "Bulbasaur";
 		storage.current_pokemon[2] = 0;
 		storage.zone = "pallettown";
