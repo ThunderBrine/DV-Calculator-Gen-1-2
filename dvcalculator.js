@@ -34,7 +34,7 @@ function clearStat(stat)
 }
 
 // Determine whether a number is odd or even
-function even(num) 
+function even(num)
 {
 	return num % 2 == 0;
 }
@@ -68,7 +68,7 @@ function changeKO(id, dir)
 		var entry = $('k' + id);
 		entry.value = parseFloat(entry.value) + dir * parseFloat(storage.kostep);
 
-		if(entry.value < 0)//field validation 
+		if(entry.value < 0)//field validation
 			entry. value = 0;
 
 		storage.buttonEntry[id - 1] = true;
@@ -77,14 +77,14 @@ function changeKO(id, dir)
 }
 
 // Set manual entry mode for a KO input field
-function setManual(id) 
+function setManual(id)
 {
 	var entry = $('k' + id);
 
 	if(storage.buttonEntry[id - 1] == false)
 	{
 		var i = id - 1;
-		storage.manualEntry[i] = true;	
+		storage.manualEntry[i] = true;
 		storage.previousKO[i] = parseFloat(entry.value);
 		entry.value = 0;
 		entry.style.backgroundColor = '#ff8fa0';
@@ -98,7 +98,7 @@ function setManual(id)
 function untrack(event)
 {
 	id = this.alt;
-	
+
 	if(isset(storage.savedpokemon[id]))
 	{
 		storage.savedpokemon[id].track = false;
@@ -412,27 +412,19 @@ function calculateHiddenPower()
 
 	storage.hiddenpower = new Object();
 
-	for(i = 1; i < getLength(storage.mode); i++)
+	for(i = 1; i < getLength(storage.mode) - 1; i++)
 	{
-		if(i != 3 && i != 4)
-		{
-			if(storage.mode[i] <= 7)
-				binary = binary + "0";
-			else
-				binary = binary + "1";
-		}
+		if(storage.mode[i] <= 7)
+			binary = binary + "0";
+		else
+			binary = binary + "1";
 	}
 
-	if(storage.mode[3] <= 7)
-		binary = binary + "0";
-	else
-		binary = binary + "1";
-
 	var x = parseInt(binary, 2);
-	var y = Math.min(storage.mode[4], 3);//special DV capped at 3
+	var y = storage.mode[4] % 4;
 	var basedmg = (5 * x + y) / 2 + 31;
-	var a = (+storage.mode[1]).toString(2);
-	var b = (+storage.mode[1]).toString(2);
+	var a = (+storage.mode[1]).toString(2).padStart(4, '0');
+	var b = (+storage.mode[2]).toString(2).padStart(4, '0');
 	var typebin = a[2] + a[3] + b[2] + b[3];
 	var typedec = parseInt(typebin, 2);
 	storage.hiddenpower.damage = Math.floor(basedmg);
@@ -848,7 +840,7 @@ function update()
 			var knockouts = Number.parseFloat(storage.input[id]);
 			storage.knockouts[k] = Number.parseFloat(storage.knockouts[k]);
 
-			if(storage.manualEntry[k] == true) 
+			if(storage.manualEntry[k] == true)
 				knockouts += parseFloat(storage.previousKO[k]);
 
 			var delta = knockouts - storage.knockouts[k];//Find diff. between input and stored value
@@ -1303,24 +1295,8 @@ function update()
 				//updated to use a statistical method to improve rarity stat
 				if(getLength(storage.records) > 0)
 				{
-					/* var rarity = 1;
-					var hp = 1;
-					//runs once for each stat (4)
-					for(i = 1; i < getLength(storage.mode); i++)
-					{
-						if(!(storage.gen == 2 && i == 5))
-						{
-							rarity *= (16.0 - parseFloat(storage.mode[i])) / 16.0;
-							//50% chance is odd, weighted by contribution to total
-							if(!even(storage.mode[i]))
-							{
-								var div = Math.pow(2, i - 1);
-								hp *= 2 * (1 - 0.5 / div) * 0.5;//arbitrary scale * weight * probability of odd
-							}
-						}
-					}
-					hp = (1 / hp) - 1;//arbitrary translation
-					hp = Math.max(1, hp); */
+					// Bug fix, HP was undefined
+					hp = storage.mode[0];
 					var dvTotal = hp;
 					for(i = 1; i < getLength(storage.mode); i++)
 					{
@@ -1703,4 +1679,13 @@ async function cacheTables(gen)
 	localStorage.setItem('tables', JSON.stringify(tables));
 	tables = JSON.parse(localStorage.getItem('tables'));
 }
+
+function scrollToTop() {
+	window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+window.onscroll = function() {
+	document.getElementById("TOP_BUTTON").style.display =
+		document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? "block" : "none";
+};
 //EOF
